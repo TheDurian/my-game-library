@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:listr/models/game.dart';
+import 'package:my_game_library/models/game.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

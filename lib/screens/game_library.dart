@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:listr/database/database.dart';
-import 'package:listr/models/game.dart';
-import 'package:listr/widgets/game_card.dart';
+import 'package:my_game_library/database/database.dart';
+import 'package:my_game_library/models/game.dart';
+import 'package:my_game_library/components/game_card.dart';
 
 import 'edit_game_screen.dart';
 
@@ -13,14 +13,6 @@ class GameLibrary extends StatefulWidget {
 class GameLibraryState extends State<GameLibrary> {
   final db = GameDatabase();
   
-  //Accent (+ floating action button)
-  //POP color
-  
-  //General Background
-  
-  
-  final Color cardTextColor = Color(0xFF303030);
-
   List<Game> games = [];
 
   @override
@@ -83,12 +75,8 @@ class GameLibraryState extends State<GameLibrary> {
     print("Removing $id : $name from database.");
     await db.removeGame(id);
 
-    var _games = await db.fetchAll();
-
-    //Scaffold.of(context).showSnackBar(SnackBar(content: Text("Deleted game $name")));
-    setState(() {
-      games = _games;
-    });
+    setupList();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Deleted game $name")));
   }
 
   void setupList() async {
@@ -106,7 +94,6 @@ class GameLibraryState extends State<GameLibrary> {
             child: Text('Debug Print All'),
             onPressed: () {
               print(games);
-              setState(() {});
             },
           )
         ),

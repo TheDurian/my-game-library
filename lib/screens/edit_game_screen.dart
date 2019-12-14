@@ -1,8 +1,8 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:listr/database/database.dart';
-import 'package:listr/models/game.dart';
+import 'package:my_game_library/database/database.dart';
+import 'package:my_game_library/models/game.dart';
 import 'package:intl/intl.dart';
 
 

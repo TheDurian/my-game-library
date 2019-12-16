@@ -60,3 +60,37 @@ Here are the associated links for ideas I want to add.
 
 ### Appbar Settings
  * https://github.com/RobertBrunhage/Youtube-Tutorials/blob/master/settings_button/lib/main.dart
+
+## Widgets that seem cool and i want to try and use
+ * Dismissible
+	* https://www.youtube.com/watch?v=iEMgjrfuc58&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=29
+
+## Code segments i may be interested in
+
+~~~
+ showDialog(
+	context: context,
+	child: new AlertDialog(
+		title: new Text("Details"),
+		//content: new Text("Hello World"),
+		content: new SingleChildScrollView(
+			child: new ListBody(
+				children: <Widget>[
+					new Text("Name : " + data.name),
+					new Text("Phone : " + data.phone),
+					new Text("Email : " + data.email),
+					new Text("Age : " + data.age),
+				],
+			),
+		),
+		actions: <Widget>[
+			new FlatButton(
+				child: new Text('OK'),
+				onPressed: () {
+					Navigator.of(context).pop();
+				},
+			),
+		],
+	)
+);
+~~~

@@ -11,12 +11,6 @@ class Game {
   int playtime;
 
   String notes;
-  
-  
-  
-
-  bool isCustomEdition; //May not be needed here
-
 
   static final ownedStatuses = ["Emulated", "Physical", "Digital", "Wishlist"];
   static final editions = ["Standard", "Steelbook", "Metalcase/Other"];
@@ -53,7 +47,19 @@ class Game {
     "Xbox One",
     "Other"
   ];
-  Game({this.id, this.name, this.ownedStatus, this.edition, this.price, this.platform, this.playStatus, this.dateOfLastCompletion, this.playtime, this.notes});
+
+  Game({
+    this.id, 
+    this.name, 
+    this.ownedStatus, 
+    this.edition, 
+    this.price, 
+    this.platform, 
+    this.playStatus, 
+    this.dateOfLastCompletion, 
+    this.playtime, 
+    this.notes
+  });
   
   Map<String,dynamic> toMap() {
     return {
@@ -64,7 +70,7 @@ class Game {
       'price': price,
       'platform': platform,
       'playStatus': playStatus,
-      'dateOfLastCompletion': dateOfLastCompletion!=null ? dateOfLastCompletion.millisecondsSinceEpoch : null,
+      'dateOfLastCompletion': dateOfLastCompletion?.millisecondsSinceEpoch,
       'playtime': playtime,
       'notes': notes
     };
@@ -78,13 +84,16 @@ class Game {
       price = map['price'];
       platform = map['platform'];
       playStatus = map['playStatus'];
-      if (map['dateOfLastCompletion'] != null) dateOfLastCompletion = DateTime.fromMillisecondsSinceEpoch(map['dateOfLastCompletion']);
-      else dateOfLastCompletion = null;
+      dateOfLastCompletion = (map['dateOfLastCompletion']!=null) ? DateTime.fromMillisecondsSinceEpoch(map['dateOfLastCompletion']) : null;
       playtime = map['playtime'];
       notes = map['notes'];
   }
+
+  
     
-  bool isOwned() => ownedStatus!=null && ownedStatus!="Wishlist";
+  bool isOwned() => ownedStatus != null && ownedStatus != "Wishlist";
+
+  bool hasBeaten() => ["Beaten","Polishing","Platinum/All Achievements","100%"].contains(playStatus);
 
   void modifyOwnershipFields(String status) {
     ownedStatus = status;
@@ -97,8 +106,7 @@ class Game {
   }
 
   @override
-  String toString() {
-    return this.toMap().toString();
-  }
+  String toString() => this.toMap().toString();
+  
 
 }

@@ -3,26 +3,6 @@
 
 An App to keep track of your games and which to buy.
 
-## Bugs
- * Price Number format-er needs work
-	 * Number can have multiple periods
-	 * Number can be in the thousands
-	 * The number can have 3+ decimal values
-	 * Price does not need to be provided, and will error if left blank
- * 
-## Ideas I want to implement
- * Playtime
- * Notes (some general stuff)
- * Filtering on your game list
-	 * start typing and it will only list the ones you have in the filter
-	 * have some default filters that you can click 
- * Icons for games (box art?)
- * AppBar
-	 * Left side is a hamburger menu
-		 * Filters - These pull out a menu from the side that let you click in the drop downs
-		 * Other garbage like settings
- * Do something cool with the floating action button
- * Have different views for the cards. Small/Big
 ## Links and Resources
 
 Here are the associated links for ideas I want to add.
@@ -65,32 +45,5 @@ Here are the associated links for ideas I want to add.
  * Dismissible
 	* https://www.youtube.com/watch?v=iEMgjrfuc58&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=29
 
-## Code segments i may be interested in
-
-~~~
- showDialog(
-	context: context,
-	child: new AlertDialog(
-		title: new Text("Details"),
-		//content: new Text("Hello World"),
-		content: new SingleChildScrollView(
-			child: new ListBody(
-				children: <Widget>[
-					new Text("Name : " + data.name),
-					new Text("Phone : " + data.phone),
-					new Text("Email : " + data.email),
-					new Text("Age : " + data.age),
-				],
-			),
-		),
-		actions: <Widget>[
-			new FlatButton(
-				child: new Text('OK'),
-				onPressed: () {
-					Navigator.of(context).pop();
-				},
-			),
-		],
-	)
-);
-~~~
+## Widgets I am interested in
+ * AlertDialog

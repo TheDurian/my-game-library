@@ -50,3 +50,4 @@ Here are the associated links for ideas I want to add.
 	* https://www.youtube.com/watch?v=iEMgjrfuc58&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=29
 
  * AlertDialog
+ * https://www.youtube.com/watch?v=RA-vLF_vnng

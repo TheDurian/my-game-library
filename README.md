@@ -43,6 +43,7 @@ Here are the associated links for ideas I want to add.
 
 ### Animations
  * https://www.youtube.com/watch?v=rLwWVbv3xDQ&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=8
+ * https://www.youtube.com/watch?v=ZtfItHwFlZ8
 
 ## Widgets that seem cool and i want to try and use
  * Dismissible

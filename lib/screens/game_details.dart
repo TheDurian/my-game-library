@@ -37,10 +37,10 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(),
-                        color: Colors.amberAccent
+                        //color: Colors.amberAccent
                       ),
                       child: Center(
-                        child: Text(
+                        child: Text( 
                           widget.game.name, 
                           textAlign: TextAlign.center,  
                         ),
@@ -51,17 +51,26 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(),
-                        color: Colors.blueAccent
+                        //color: Colors.blueAccent
                       ),
                       child: Row(
                         children: <Widget>[
                           Expanded(
                             flex: 1,
-                            child: Text("aaa"),
+                            child: Text(
+                              "Platform",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
                           ),
                           Expanded(
                             flex: 2,
-                            child: Placeholder(),
+                            child: Text(
+                              widget.game.platform,
+                              textAlign: TextAlign.center,
+                            ),
                           )
                         ],
                       ),
@@ -71,7 +80,28 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(),
-                        color: Colors.greenAccent
+                        //color: Colors.greenAccent
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Status",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              widget.game.ownedStatus,
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
                       ),
                     )
                   )
@@ -96,22 +126,60 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
       decoration: BoxDecoration(
           border: Border.all()
       ),
-      child: ListView(
+      child: Column(
         children: <Widget>[
-          Center(
-            child: Text(
-              "Notes",
-              style: TextStyle(
-                fontSize: 20,
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0)
+              )
+            ),
+            child: Center(
+              child: Text(
+                "Notes",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.all(4),
-            child: Text(
-              widget.game.notes==null ? '' : widget.game.notes
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => _buildNotesDialog(context),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.all(4),
+                child: Stack(
+                  children: <Widget>[
+                    Text(
+                      widget.game.notes==null ? '' : widget.game.notes,
+                      overflow: TextOverflow.fade,
+                      maxLines: 5,
+                      strutStyle: StrutStyle(fontSize: 15),
+                    ),
+                    Align(
+                      //bottom: 0,
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        "Click to expand",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                          backgroundColor: Colors.grey
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
+
         ],
       ),
     );
@@ -124,12 +192,15 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
         child: Column(
           children: <Widget>[
             Expanded(
+              flex: 1,
               child: titleSection,
             ),
             Expanded(
+              flex: 2,
               child:middleSection,
             ),
             Expanded(
+              flex: 1,
               child:bottomSection,
             )
           ],
@@ -140,6 +211,16 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
 
   Widget landscape(BuildContext context) {
     return Container(child: Text("I dont have a landscape view yet"),);
+  }
+
+  Widget _buildNotesDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text("Notes"),
+      content: Container(
+        child: Text(widget.game.notes),
+      ),
+
+    );
   }
 
 

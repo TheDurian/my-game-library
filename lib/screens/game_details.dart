@@ -154,12 +154,33 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
         decoration: BoxDecoration(
           border: Border.all(),
         ),
-        child: Container(
-          child: SizedBox.expand(
-            child: Text(
-              _notesIsMinimized ? "Notes" : widget.game.notes
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Center(
+                child: Text(
+                  "Notes",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(width: 1))
+              ),
             ),
-          ),
+            Flexible(
+              //fit: BoxFit.contain,
+              child: Text(
+                widget.game.notes==null ? "" : widget.game.notes,
+                //softWrap: true,
+                textAlign: TextAlign.start,
+                overflow: _notesIsMinimized ? TextOverflow.fade : null,
+                // maxLines: _notesIsMinimized ? 5 : null,
+              ),
+            ),
+          ],
         ),
       ),
     );

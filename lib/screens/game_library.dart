@@ -159,13 +159,13 @@ class GameLibraryState extends State<GameLibrary> {
                 name: "Dark Souls 1",
                 platform: "PS4", 
                 ownedStatus: "Wishlist",
-                notes: """This will be a very long post This will be a very long post This will be a very long post 
-                  This will be a very long post This will be a very long post This will be a very long post This will 
-                  be a very long post This will be a very long post This will be a very long post This will be a very
-                   long post This will be a very long post This will be a very long post This will be a very long post
-                    This will be a very long post This will be a very long post This will be a very long post This will 
-                    be a very long post This will be a very long post This will be a very long post This will be a very 
-                    long post This will be a very long post""".replaceAll("\n", "").replaceAll("  ", ""),
+                notes: "This will be a very long post This will be a very long post This will be a very long post"
+                  "This will be a very long post This will be a very long post This will be a very long post This will "
+                  "be a very long post This will be a very long post This will be a very long post This will be a very "
+                   "long post This will be a very long post This will be a very long post This will be a very long post "
+                    "This will be a very long post This will be a very long post This will be a very long post This will "
+                    "be a very long post This will be a very long post This will be a very long post This will be a very "
+                    "long post This will be a very long post",
                 dateOfLastCompletion: DateTime.now(),
                 edition: "Steelbook",
                 playStatus: "Playing",

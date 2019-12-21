@@ -142,7 +142,8 @@ class _EditGameScreenState extends State<EditGameScreen> {
                     child: TextFormField(
                       initialValue: _game.notes,
                       maxLines: 5,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.multiline,
+                      //textInputAction: TextInputAction.,
                       decoration: InputDecoration(labelText: "Notes", border: OutlineInputBorder()),
                       onSaved: (val) => setState(() => _game.notes = val),
                     ),

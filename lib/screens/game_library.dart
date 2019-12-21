@@ -155,11 +155,46 @@ class GameLibraryState extends State<GameLibrary> {
           child:  RaisedButton(
             child: Text("Generate Samples"),
             onPressed: () async {
-              var game1 = Game(name: "Dark Souls 1", platform: "PS4", ownedStatus: "Wishlist");
-              var game2 = Game(name: "Legend of Zelda: Breath of the Wild", platform: "Switch", ownedStatus: "Wishlist");
-              var game3 = Game(name: "Nier Automata", platform: "PS4", ownedStatus: "Wishlist");
-              var game4 = Game(name: "Legend of Zelda: Link's Awakening", platform: "Switch", ownedStatus: "Wishlist");
-              var game5 = Game(name: "Luigis Mansion 3", platform: "Switch", ownedStatus: "Wishlist");
+              var game1 = Game(
+                name: "Dark Souls 1",
+                platform: "PS4", 
+                ownedStatus: "Wishlist",
+                notes: """This will be a very long post This will be a very long post This will be a very long post 
+                  This will be a very long post This will be a very long post This will be a very long post This will 
+                  be a very long post This will be a very long post This will be a very long post This will be a very
+                   long post This will be a very long post This will be a very long post This will be a very long post
+                    This will be a very long post This will be a very long post This will be a very long post This will 
+                    be a very long post This will be a very long post This will be a very long post This will be a very 
+                    long post This will be a very long post""".replaceAll("\n", "").replaceAll("  ", ""),
+                dateOfLastCompletion: DateTime.now(),
+                edition: "Steelbook",
+                playStatus: "Playing",
+                price: 25.11
+              );
+              var game2 = Game(
+                name: "Legend of Zelda: Breath of the Wild", 
+                platform: "Switch", 
+                ownedStatus: "Wishlist",
+                dateOfLastCompletion: DateTime.now(),
+                edition: "Standard",
+                playStatus: "Backlog",
+                price: 11.11
+              );
+              var game3 = Game(
+                name: "Nier Automata", 
+                platform: "PS4", 
+                ownedStatus: "Wishlist"
+              );
+              var game4 = Game(
+                name: "Legend of Zelda: Link's Awakening", 
+                platform: "Switch", 
+                ownedStatus: "Wishlist"
+              );
+              var game5 = Game(
+                name: "Luigis Mansion 3", 
+                platform: "Switch", 
+                ownedStatus: "Wishlist"
+              );
               await db.addGame(game1);
               await db.addGame(game2);
               await db.addGame(game3);

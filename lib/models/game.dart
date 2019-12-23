@@ -1,16 +1,16 @@
 class Game {
-  int id;
-  String name;
-  String platform;  
+  int id; //Done
+  String name; //Done
+  String platform; //Done
+  String notes; //Done
+  String ownedStatus; //Done
+  
   String edition;
-  double price;
-
-  String ownedStatus;
+  double price; 
   String playStatus;
   DateTime dateOfLastCompletion;
   int playtime;
 
-  String notes;
 
   static final ownedStatuses = ["Emulated", "Physical", "Digital", "Wishlist"];
   static final editions = ["Standard", "Steelbook", "Metalcase/Other"];

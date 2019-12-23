@@ -107,7 +107,7 @@ class _EditGameScreenState extends State<EditGameScreen> {
                           prefixIcon: Icon(Icons.attach_money)
                         ),
                         onSaved: (val) => setState(() => _game.price = double.parse(val)),
-                        validator: (value) => (double.tryParse(value)!=null && double.parse(value) < 0) ?  "Please enter price" : null,
+                        validator: (value) => (value != null && double.tryParse(value)!=null && double.parse(value) < 0) ?  "Please enter price" : null,
                       ),
                     ) : null,
                   _game.hasBeaten() ? 
@@ -134,7 +134,7 @@ class _EditGameScreenState extends State<EditGameScreen> {
                           prefixIcon: Icon(Icons.attach_money)
                         ),
                         onSaved: (val) => setState(() => _game.price = double.parse(val)),
-                        validator: (value) => (double.tryParse(value)!=null && double.parse(value) < 0) ? "Please enter price" : null,
+                        validator: (value) => (value != null && double.tryParse(value)!=null && double.parse(value) < 0) ? "Please enter price" : null,
                       ),
                     ) : null,
                   Container(
@@ -145,7 +145,11 @@ class _EditGameScreenState extends State<EditGameScreen> {
                       keyboardType: TextInputType.multiline,
                       //textInputAction: TextInputAction.,
                       decoration: InputDecoration(labelText: "Notes", border: OutlineInputBorder()),
-                      onSaved: (val) => setState(() => _game.notes = val),
+                      //onSaved: (val) => setState(() => _game.notes = val),
+                      onSaved: (val) => setState(() {
+                        print(val);
+                        _game.notes = val;
+                      }),
                     ),
                   )
                 ].where((item) => item != null).toList(),

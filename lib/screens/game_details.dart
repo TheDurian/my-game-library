@@ -132,10 +132,86 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
       ),
     );
 
+  //These need to be added in the middle section
+  // String edition;
+  // double price; 
+  // String playStatus;
+  // DateTime dateOfLastCompletion;
+  // int playtime;
+
+
     Widget middleSection = Container(
       margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
         border: Border.all(),
+      ),
+      child: Container(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(right: BorderSide(width: 1))
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  //border: Border(right: BorderSide(width: 1))
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
       
     );
@@ -171,13 +247,13 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
               ),
             ),
             Flexible(
-              //fit: BoxFit.contain,
-              child: Text(
-                widget.game.notes==null ? "" : widget.game.notes,
-                //softWrap: true,
-                textAlign: TextAlign.start,
-                overflow: _notesIsMinimized ? TextOverflow.fade : null,
-                // maxLines: _notesIsMinimized ? 5 : null,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  widget.game.notes==null ? "" : widget.game.notes,
+                  textAlign: TextAlign.start,
+                  overflow: _notesIsMinimized ? TextOverflow.fade : null,
+                ),
               ),
             ),
           ],

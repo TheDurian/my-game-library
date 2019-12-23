@@ -14,22 +14,14 @@ class GameDetailsScreen extends StatefulWidget {
 class _GameDetailsScreenState extends State<GameDetailsScreen> {
 
   int _topSectionFlex = 1;
-  int _middleSectionFlex = 2;
-  int _bottomSectionFlex = 1;
+  int _middleSectionFlex = 1;
+  int _bottomSectionFlex = 3;
   bool _notesIsMinimized = true;
-  bool _dataIsMinimized = false;
-  Duration _duration = Duration(seconds: 10);
 
   @override
   Widget build(BuildContext context) => MediaQuery.of(context).orientation == Orientation.portrait ? portrait(context) : landscape(context);
 
   Widget portrait(BuildContext context) {
-    var data = MediaQuery.of(context);
-    double height = data.size.height - data.padding.top - kToolbarHeight - data.padding.bottom - 20;
-    var topHeight = (_topSectionFlex * height) / (_topSectionFlex + _middleSectionFlex + _bottomSectionFlex);
-    var middleHeight = (_middleSectionFlex * height) / (_topSectionFlex + _middleSectionFlex + _bottomSectionFlex);
-    var bottomHeight = (_bottomSectionFlex * height) / (_topSectionFlex + _middleSectionFlex + _bottomSectionFlex);
-
     Widget titleSection = Container(
       child: Row(
         children: <Widget>[
@@ -141,7 +133,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
 
 
     Widget middleSection = Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
         border: Border.all(),
       ),
@@ -160,6 +152,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
+                        child: _createTableCell("Edition", widget.game.edition),
                       ),
                     ),
                     Expanded(
@@ -167,12 +160,12 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
+                        child: _createTableCell("Price","\$${widget.game.price}"),
                       ),
                     ),
                     Expanded(
                       child: Container(
-                        decoration: BoxDecoration(
-                        ),
+                        child: _createTableCell("Status", widget.game.playStatus),
                       ),
                     )
                   ],
@@ -182,7 +175,6 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  //border: Border(right: BorderSide(width: 1))
                 ),
                 child: Column(
                   children: <Widget>[
@@ -191,6 +183,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
+                        child: _createTableCell("Date Completed", widget.game.dateOfLastCompletion),
                       ),
                     ),
                     Expanded(
@@ -198,6 +191,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
+                        child: _createTableCell("Playtime", widget.game.playtime),
                       ),
                     ),
                     Expanded(
@@ -216,48 +210,39 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
       
     );
 
-    Widget bottomSection = GestureDetector(
-      onTap: () {
-        setState(() {
-          _middleSectionFlex = _middleSectionFlex == 1 ? 2 : 1;
-          _bottomSectionFlex = _bottomSectionFlex == 1 ? 3 : 1;
-          _notesIsMinimized = !_notesIsMinimized;
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        padding: EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          border: Border.all(),
-        ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Center(
-                child: Text(
-                  "Notes",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
-                ),
-              ),
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(width: 1))
-              ),
-            ),
-            Flexible(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  widget.game.notes==null ? "" : widget.game.notes,
-                  textAlign: TextAlign.start,
-                  overflow: _notesIsMinimized ? TextOverflow.fade : null,
+    Widget bottomSection = Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        border: Border.all(),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: Center(
+              child: Text(
+                "Notes",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
                 ),
               ),
             ),
-          ],
-        ),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(width: 1))
+            ),
+          ),
+          Flexible(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                widget.game.notes==null ? "" : widget.game.notes,
+                textAlign: TextAlign.start,
+                overflow: _notesIsMinimized ? TextOverflow.fade : null,
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -269,27 +254,45 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            AnimatedContainer(
-              duration: Duration(milliseconds: 100),
-              height: topHeight,
-              child: titleSection,
-              curve: Curves.easeInOut,
+            Expanded(
+              child: titleSection, 
+              flex: 1,
             ),
-            AnimatedContainer(
-              height: middleHeight,
-              duration: Duration(milliseconds: 100),
-              curve: Curves.easeInOut,
-              child: middleSection
+            Expanded(
+              child: middleSection, 
+              flex: 1,
             ),
-            AnimatedContainer(
-              curve: Curves.easeInOut,
-              height: bottomHeight,
-              duration: Duration(milliseconds: 100),
+            Expanded(
               child: bottomSection, 
-            )
+              flex: 2,
+            ), 
           ],
         ),
       ),
+    );
+  }
+
+  Widget _createTableCell(String label, dynamic value) {
+
+    return Row(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(left: 3),
+          child: Text(
+            "$label",
+            textAlign: TextAlign.left,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: 3),
+            child: Text(
+              "$value",
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

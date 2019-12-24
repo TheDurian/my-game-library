@@ -45,6 +45,9 @@ Here are the associated links for ideas I want to add.
  * https://www.youtube.com/watch?v=rLwWVbv3xDQ&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=8
  * https://www.youtube.com/watch?v=ZtfItHwFlZ8
 
+### Other
+ * https://github.com/iampawan/FlutterExampleApps
+
 ## Widgets that seem cool and i want to try and use
  * Dismissible
 	* https://www.youtube.com/watch?v=iEMgjrfuc58&list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG&index=29

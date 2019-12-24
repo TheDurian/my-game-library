@@ -15,6 +15,7 @@ class _EditGameScreenState extends State<EditGameScreen> {
   final _formKey = GlobalKey<FormState>();
   final _game = Game();
   final db = GameDatabase();
+  final _controller = TextEditingController();
 
   List<DropdownMenuItem> loadDropdownMenuItems(List itemList) {
     List<DropdownMenuItem> statusList = [];
@@ -28,7 +29,6 @@ class _EditGameScreenState extends State<EditGameScreen> {
     });
     return statusList;
   }
-
   
   @override
   Widget build(BuildContext context) {
@@ -113,12 +113,28 @@ class _EditGameScreenState extends State<EditGameScreen> {
                   _game.hasBeaten() ? 
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: DateTimePickerFormField(
-                        inputType: InputType.date,
-                        format: DateFormat('MMMM d, yyyy'),
-                        editable: false,
+                      child: TextFormField(
+
+                        enableInteractiveSelection: false,
+                        controller: _controller,
+                        onTap: () { 
+                          FocusScope.of(context).requestFocus(new FocusNode()); 
+                          showDatePicker(
+                            context: context,
+                            firstDate: new DateTime(1980),
+                            initialDate: DateTime.now(),
+                            lastDate: DateTime.now()).then((DateTime dt) {
+                              _game.dateOfLastCompletion = dt;
+                              if (dt==null) {
+                                _controller.clear();
+                              } else {
+                                _controller.text = "${DateFormat('yyyy-MM-dd').format(dt)}";
+                              }
+                              print(_controller.text);
+                            },
+                          );
+                        },
                         decoration: InputDecoration(labelText: "Last Completion Date", border: OutlineInputBorder()),
-                        onSaved: (val) => _game.dateOfLastCompletion = val,
                       ),
                     ) : null,
                   _game.ownedStatus != null && !_game.isOwned() ? 
@@ -151,7 +167,8 @@ class _EditGameScreenState extends State<EditGameScreen> {
                         _game.notes = val;
                       }),
                     ),
-                  )
+                  ),
+                  
                 ].where((item) => item != null).toList(),
               ),
           ),

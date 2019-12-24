@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_game_library/models/game.dart';
+import 'package:intl/intl.dart';
 
 class GameDetailsScreen extends StatefulWidget {
   final Game game;
@@ -160,7 +161,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
-                        child: _createTableCell("Price","\$${widget.game.price}"),
+                        child: _createTableCell("Price",widget.game.price==null ? null : "\$${widget.game.price}"),
                       ),
                     ),
                     Expanded(
@@ -183,7 +184,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 1))
                         ),
-                        child: _createTableCell("Date Completed", widget.game.dateOfLastCompletion),
+                        child: _createTableCell("Completed", widget.game.dateOfLastCompletion==null ? "N/A" : DateFormat("yyyy-MM-dd").format(widget.game.dateOfLastCompletion)),
                       ),
                     ),
                     Expanded(
@@ -273,7 +274,7 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   }
 
   Widget _createTableCell(String label, dynamic value) {
-
+    if (value == null) value = "N/A";
     return Row(
       children: <Widget>[
         Container(

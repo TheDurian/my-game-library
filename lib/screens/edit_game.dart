@@ -127,9 +127,8 @@ class _EditGameScreenState extends State<EditGameScreen> {
                               if (dt==null) {
                                 _controller.clear();
                               } else {
-                                _controller.text = "${DateFormat('yyyy-MM-dd').format(dt)}";
+                                _controller.text = "${DateFormat.yMMMMd('en_US').format(dt)}";
                               }
-                              print(_controller.text);
                             },
                           );
                         },

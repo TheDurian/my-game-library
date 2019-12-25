@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_game_library/components/animated_fab.dart';
 import 'package:my_game_library/database/database.dart';
 import 'package:my_game_library/models/game.dart';
 import 'package:my_game_library/components/game_card.dart';
@@ -82,20 +83,51 @@ class GameLibraryState extends State<GameLibrary> {
         child: Column(
           children: <Widget>[
             _buildAddButton(),
-            _buildGameList(games)
+            _buildGameList(games),
+            
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          final result = await Navigator.push(
-            context, MaterialPageRoute(builder: (context) => EditGameScreen())
-          );
-          //print(result);
-          setupList();
-        }
+
+
+      floatingActionButton: AnimatedFloatingActionButton(
+        startingAnimationColor: Theme.of(context).accentColor,
+        endingAnimationColor: Colors.red,
+        fabButtons: <Widget>[
+          FloatingActionButton(
+            onPressed: () async {
+              print("Not yet implemented. THis is search to filter");
+            },
+            child: Icon(Icons.search),
+            heroTag: null,
+          ),
+          FloatingActionButton(
+            onPressed: () async {
+              print("Not yet implemented. This is filter");
+            },
+            child: Icon(Icons.filter_list),
+            heroTag: null,
+          ),
+          FloatingActionButton(
+            onPressed: () async {
+              await Navigator.push(context, MaterialPageRoute(builder: (context) => EditGameScreen()));
+              setupList();
+            },
+            heroTag: null,
+            child: Icon(Icons.add),
+          ),
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () async {
+      //     final result = await Navigator.push(
+      //       context, MaterialPageRoute(builder: (context) => EditGameScreen())
+      //     );
+      //     //print(result);
+      //     setupList();
+      //   }
+      // ),
     );
   }
 

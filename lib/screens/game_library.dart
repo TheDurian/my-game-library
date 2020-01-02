@@ -15,6 +15,7 @@ class GameLibraryState extends State<GameLibrary> {
   final db = GameDatabase();
   
   List<Game> games = [];
+  bool _displayTextSearchDrawer = false;
 
   @override
   void initState() {
@@ -26,58 +27,13 @@ class GameLibraryState extends State<GameLibrary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // endDrawer: SizedBox(
-      //   width: 200,
-      //   child: Drawer(
-      //     child: ListView(
-      //       padding: EdgeInsets.zero,
-      //       children: <Widget>[
-      //       DrawerHeader(
-      //         child: Container(
-      //           alignment: Alignment.bottomCenter,
-      //           child: Text(
-      //             'Filter Menu',
-      //             style: TextStyle(
-      //               fontSize: 24,
-      //               color: Colors.white
-      //             ),
-      //           ),
-      //         ),
-      //         decoration: BoxDecoration(
-      //           color: Theme.of(context).primaryColor,
-      //         ),
-      //       ),
-      //       ListTile(
-      //         //leading: Text('Item 1'),
-      //         title: TextFormField(
-      //           decoration: InputDecoration(
-      //             labelText: "label text" 
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           // Update the state of the app
-      //           // ...
-      //           // Then close the drawer
-      //           Navigator.pop(context);
-      //         },
-      //       ),
-      //       ListTile(
-      //         title: Text('Item 2'),
-      //         onTap: () {
-      //           // Update the state of the app
-      //           // ...
-      //           // Then close the drawer
-      //           Navigator.pop(context);
-      //         },
-      //       ),
-      //     ],
-      //     ),
-      //     elevation: 6,
-      //   ),
-      // ),
       appBar: AppBar(
         title: Text("My Game List"),
+        actions: <Widget>[Container()], // Remove hamburger icon and drag option for endDrawer
       ),
+      drawerEdgeDragWidth: 0,
+      endDrawer: _displayTextSearchDrawer ? _buildTextSearchDrawer(context) : _buildFilterDrawer(),
+
       body: Container(
         alignment: Alignment.topCenter,
         child: Column(
@@ -88,25 +44,39 @@ class GameLibraryState extends State<GameLibrary> {
           ],
         ),
       ),
-
-
       floatingActionButton: AnimatedFloatingActionButton(
         startingAnimationColor: Theme.of(context).accentColor,
         endingAnimationColor: Colors.red,
         fabButtons: <Widget>[
-          FloatingActionButton(
-            onPressed: () async {
-              print("Not yet implemented. THis is search to filter");
-            },
-            child: Icon(Icons.search),
-            heroTag: null,
+          Builder(
+            builder: (BuildContext context) {
+              return FloatingActionButton(
+                onPressed: () async {
+                  print("Not yet implemented. THis is search to filter");
+                  setState(() {
+                    _displayTextSearchDrawer = true;
+                  });
+                  Scaffold.of(context).openEndDrawer();
+                },
+                child: Icon(Icons.search),
+                heroTag: null,
+              );
+            }
           ),
-          FloatingActionButton(
-            onPressed: () async {
-              print("Not yet implemented. This is filter");
-            },
-            child: Icon(Icons.filter_list),
-            heroTag: null,
+          Builder(
+            builder: (BuildContext context){
+              return FloatingActionButton(
+                onPressed: () async {
+                  setState(() {
+                    _displayTextSearchDrawer = false;
+                  });
+                  // Scaffold.of(context).openEndDrawer();
+                  _showDialog(context, "Notice", "Filter drawer has not yet been added.");
+                },
+                child: Icon(Icons.filter_list),
+                heroTag: null,
+              );
+            }
           ),
           FloatingActionButton(
             onPressed: () async {
@@ -118,23 +88,13 @@ class GameLibraryState extends State<GameLibrary> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   onPressed: () async {
-      //     final result = await Navigator.push(
-      //       context, MaterialPageRoute(builder: (context) => EditGameScreen())
-      //     );
-      //     //print(result);
-      //     setupList();
-      //   }
-      // ),
     );
   }
 
   Widget _buildGameList(List<Game> gameList) {
     return Expanded(
       child: ListView.builder(
-        padding: EdgeInsets.all(5.0),
+        padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 60),
         itemCount: gameList.length,
         
         itemBuilder: (BuildContext context, int index) {
@@ -145,7 +105,7 @@ class GameLibraryState extends State<GameLibrary> {
             onLongPress: () async {
               await db.removeGame(gameList[index].id);
               setupList();
-              _showDialog(context, "${gameList[index].name} has been deleted");
+              _showSnackBar(context, "${gameList[index].name} has been deleted");
             },
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailsScreen(game: gameList[index]))),
           ); 
@@ -154,24 +114,6 @@ class GameLibraryState extends State<GameLibrary> {
     );
   }
 
-  onDelete(int id, String name) async {
-    print("Removing $id : $name from database.");
-    await db.removeGame(id);
-
-    setupList();
-    
-  }
-
-  void setupList() async {
-    var _games = await db.fetchAll();
-    setState(() {
-      games = _games;
-    });
-  }
-
-  _showDialog(BuildContext context, String message) => Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
-  
-
   Widget _buildAddButton() {
     return Row(
       children: <Widget>[
@@ -179,7 +121,7 @@ class GameLibraryState extends State<GameLibrary> {
           child: RaisedButton(
             child: Text('Debug Print All'),
             onPressed: () {
-              print(games);
+              _showDialog(context, "Notice", "This button does not do anything, it is only there for testing.");
             },
           )
         ),
@@ -244,5 +186,94 @@ class GameLibraryState extends State<GameLibrary> {
     );
   }
   
+  Widget _buildTextSearchDrawer(BuildContext context) {
+    return Drawer(
+      key: ValueKey("TextSearch"),
+      child: ListView(
+        padding: EdgeInsets.all(0),
+        children: <Widget>[
+          DrawerHeader(
+            child: Text(
+              "Text Filter",
+              style: TextStyle(
+                fontSize: 40,
+                color: Colors.white
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    child: TextField(
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder()
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Container(
+                    child: Icon(Icons.search),
+                    decoration: BoxDecoration(
+                      border: Border.all()
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterDrawer() {
+    return Drawer(
+      key: ValueKey("Filter"),
+    );
+  }
+
+  onDelete(int id, String name) async {
+    print("Removing $id : $name from database.");
+    await db.removeGame(id);
+
+    setupList();
+    
+  }
+
+  setupList() async {
+    var _games = await db.fetchAll();
+    setState(() {
+      games = _games;
+    });
+  }
+
+  _showSnackBar(BuildContext context, String message) => Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+  
+  _showDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Ok"),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        );
+      } 
+    );
+  }
   
 }

@@ -26,6 +26,7 @@ class _AnimatedFloatingActionButtonState extends State<AnimatedFloatingActionBut
   Animation<Color> _animateColor;
   Animation<double> _animateIcon;
   Animation<double> _translateButton;
+  // Animation<double> _fabElevation;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
 
@@ -61,6 +62,10 @@ class _AnimatedFloatingActionButtonState extends State<AnimatedFloatingActionBut
         curve: _curve
       )
     ));
+    // _fabElevation = Tween<double>(
+    //   begin: 0,
+    //   end: 6
+    // ).animate(_animationController);
     super.initState();
   }
 

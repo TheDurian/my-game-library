@@ -56,7 +56,7 @@ class _EditGameScreenState extends State<EditGameScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
+                    child: Row( 
                       children: <Widget>[
                         Expanded(
                           child: DropdownButtonFormField(

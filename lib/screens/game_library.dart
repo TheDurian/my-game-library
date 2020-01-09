@@ -3,8 +3,10 @@ import 'package:my_game_library/components/animated_fab.dart';
 import 'package:my_game_library/database/database.dart';
 import 'package:my_game_library/models/game.dart';
 import 'package:my_game_library/components/game_card.dart';
+import 'package:my_game_library/models/text_filter.dart';
 import 'game_details.dart';
 import 'edit_game.dart';
+import 'package:my_game_library/components/text_filter_modal.dart';
 
 class GameLibrary extends StatefulWidget {
   @override
@@ -13,13 +15,9 @@ class GameLibrary extends StatefulWidget {
 
 class GameLibraryState extends State<GameLibrary> {
   final db = GameDatabase();
-  bool _textFilterIncludeNames = true;
-  bool _textFilterIncludeNotes = false;
-  final _textFilterController = TextEditingController();
-  String _textFilter = "";
-  
+  TextFilter _textFilter = TextFilter();
+
   List<Game> games = [];
-  bool _displayTextSearchDrawer = false;
 
   @override
   void initState() {
@@ -36,7 +34,7 @@ class GameLibraryState extends State<GameLibrary> {
         actions: <Widget>[Container()], // Remove hamburger icon and drag option for endDrawer
       ),
       drawerEdgeDragWidth: 0,
-      endDrawer: _displayTextSearchDrawer ? _buildTextSearchDrawer(context) : _buildFilterDrawer(),
+      endDrawer: _buildDrawer(context),
 
       body: Container(
         alignment: Alignment.topCenter,
@@ -53,31 +51,14 @@ class GameLibraryState extends State<GameLibrary> {
         endingAnimationColor: Colors.red,
         fabButtons: <Widget>[
           Builder(
-            builder: (BuildContext context) {
-              return FloatingActionButton(
-                onPressed: () async { //TODO: See if I can close the fab animation when this is pressed
-                  setState(() {
-                    _displayTextSearchDrawer = true;
-                  });
-                  Scaffold.of(context).openEndDrawer();
-                },
-                child: Icon(Icons.search),
-                heroTag: null,
-              );
-            }
-          ),
-          Builder(
             builder: (BuildContext context){
               return FloatingActionButton(
                 onPressed: () async { //TODO: See if I can close the fab animation when this is pressed
-                  setState(() {
-                    _displayTextSearchDrawer = false;
-                  });
-                  // Scaffold.of(context).openEndDrawer();
-                  _showDialog(context, "Notice", "Filter drawer has not yet been added.");
+                  Scaffold.of(context).openEndDrawer();
                 },
                 child: Icon(Icons.filter_list),
                 heroTag: null,
+                tooltip: "Filter",
               );
             }
           ),
@@ -88,6 +69,7 @@ class GameLibraryState extends State<GameLibrary> {
             },
             heroTag: null,
             child: Icon(Icons.add),
+            tooltip: "Add Game",
           ),
         ],
       ),
@@ -100,7 +82,7 @@ class GameLibraryState extends State<GameLibrary> {
         padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 60),
         itemCount: gameList.length,
         itemBuilder: (BuildContext context, int index) {
-          return _textFilterController == null || _textFilter=="" 
+          return _textFilter.text == null || _textFilter.text=="" 
             ? GestureDetector(
               child: GameCard(
                 game: gameList[index],
@@ -202,9 +184,8 @@ class GameLibraryState extends State<GameLibrary> {
     );
   }
   
-  Widget _buildTextSearchDrawer(BuildContext context) {
+  Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      key: ValueKey("TextSearch"),
       child: Column(
         children: <Widget>[
           DrawerHeader(
@@ -212,7 +193,7 @@ class GameLibraryState extends State<GameLibrary> {
             child: Container(
               alignment: Alignment.bottomLeft,
               child: Text(
-                "Text Filter",
+                "Filter",
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.white
@@ -223,69 +204,48 @@ class GameLibraryState extends State<GameLibrary> {
               color: Theme.of(context).primaryColor
             ),
           ),
-          Container( //TODO: Add a [X] icon to the text field which can erase the contents. Use a stack to overlay
-            padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-            child: TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(5),
-                border: OutlineInputBorder(),
-                hintText: "Text to look for..."
-              ),
-              controller: _textFilterController,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(5, 15, 20, 0),
-            child: Text(
-              "Include:",
+          ListTile(
+            leading: Icon(Icons.search),
+            title: Text(
+              "Text Search",
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 18,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          Container(
-            child: CheckboxListTile(
-              title: Text("Search Names"),
-              onChanged: (bool value) => setState(()=>_textFilterIncludeNames=value), 
-              value: _textFilterIncludeNames,
-            ),
-          ),
-          Container(
-            child: CheckboxListTile(
-              title: Text("Search Notes"),
-              onChanged: (bool value) => setState(()=>_textFilterIncludeNotes=value), 
-              value: _textFilterIncludeNotes,
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: SizedBox(
-                width: 200,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1),
-                    borderRadius: BorderRadius.all(Radius.circular(5))
-                  ),
-                  child: Text("Update Search"), 
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    setState(() => _textFilter = _textFilterController.text);
-                    Navigator.of(context).pop();
-                  },
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            subtitle: _textFilter.text=="" 
+              ? null 
+              : Text(
+                _textFilter.text,
+                style: TextStyle(
+                  color: Colors.blue,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
+            trailing: _textFilter.text=="" 
+              ? null 
+              : FlatButton(
+                child: Icon(Icons.close),
+                onPressed: () => setState(() => _textFilter.reset()),
+              ),
+            onTap: () async {
+              Navigator.of(context).pop();
+              TextFilter newFilter = await Navigator.of(context).push(MaterialPageRoute<TextFilter>(
+                builder: (BuildContext context) {
+                  return TextFilterDialog(textFilter: _textFilter,);
+                },
+                fullscreenDialog: true
+              ));
+              if (newFilter != null) {
+                _textFilter = newFilter;
+              }
+            },
+          ),
+          Divider(
+            thickness: 5,
           )
         ],
       ),
-    );
-  }
-
-  Widget _buildFilterDrawer() {
-    return Drawer(
-      key: ValueKey("Filter"),
     );
   }
 
@@ -308,8 +268,8 @@ class GameLibraryState extends State<GameLibrary> {
 
 
     //TODO: When added, include other filter logic in this section
-    if (_textFilterIncludeNames && game.name.toLowerCase().contains(_textFilter.toLowerCase())) return true;
-    if (_textFilterIncludeNotes && game.notes != null && game.notes.toLowerCase().contains(_textFilter.toLowerCase())) return true;
+    if (_textFilter.includeName && game.name.toLowerCase().contains(_textFilter.text.toLowerCase())) return true;
+    if (_textFilter.includeNotes && game.notes != null && game.notes.toLowerCase().contains(_textFilter.text.toLowerCase())) return true;
     return false;
     
   }
@@ -335,19 +295,3 @@ class GameLibraryState extends State<GameLibrary> {
   }
   
 }
-
-
-// new ListView.builder(
-//   itemCount: items.length,
-//   itemBuilder: (BuildContext context, int index) {
-//   return filter == null || filter == "" 
-//     ? new Card(
-//       child: new Text(items[index])
-//     ) 
-//     : items[index].contains(filter) 
-//       ? new Card(
-//         child: new Text(items[index])
-//       ) 
-//       : new Container();
-// },
-// ),

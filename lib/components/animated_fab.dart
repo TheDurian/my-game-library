@@ -88,7 +88,7 @@ class _AnimatedFloatingActionButtonState extends State<AnimatedFloatingActionBut
     return FloatingActionButton(
       backgroundColor: _animateColor.value,
       onPressed: animate,
-      tooltip: 'Toggle',
+      tooltip: "Toggle Menu",
       child: AnimatedIcon(
         icon: AnimatedIcons.menu_close,
         progress: _animateIcon,

@@ -18,8 +18,8 @@ class TextFilterDialogState extends State<TextFilterDialog> {
 
   @override
   void initState() {
-    super.initState();
     _controller.text = widget.filter.text;
+    super.initState();
   }
 
   @override
@@ -68,25 +68,25 @@ class TextFilterDialogState extends State<TextFilterDialog> {
               ),
             ),
             Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: SizedBox(
-                  width: 200,
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1),
-                      borderRadius: BorderRadius.all(Radius.circular(5))
-                    ),
-                    child: Text("Update Filter"), 
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      setState(() => widget.filter.text = _controller.text);
-                      Navigator.of(context).pop(widget.filter);
-                    },
+            child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: SizedBox(
+                width: 200,
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(5))
                   ),
+                  child: Text("Update Filter"), 
+                  color: Theme.of(context).accentColor,
+                  onPressed: () {
+                    setState(() => widget.filter.text = _controller.text);
+                    Navigator.of(context).pop(widget.filter);
+                  },
                 ),
               ),
             ),
+          ),
           ],
         ),
       ),

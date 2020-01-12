@@ -18,7 +18,11 @@ class GameCard extends StatelessWidget {
               padding: EdgeInsets.all(4)
             ),
             Expanded(
-              child: Text(game.name),
+              child: Text(
+                game.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Expanded(
               child: Container(

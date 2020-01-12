@@ -3,10 +3,11 @@ import 'package:my_game_library/components/animated_fab.dart';
 import 'package:my_game_library/database/database.dart';
 import 'package:my_game_library/models/game.dart';
 import 'package:my_game_library/components/game_card.dart';
-import 'package:my_game_library/models/text_filter.dart';
+import 'package:my_game_library/models/filter.dart';
 import 'game_details.dart';
 import 'edit_game.dart';
-import 'package:my_game_library/components/text_filter_modal.dart';
+import 'package:my_game_library/components/filter_dialogs/text_filter_modal.dart';
+import 'package:my_game_library/components/filter_dialogs/platform_filter_modal.dart';
 
 class GameLibrary extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class GameLibrary extends StatefulWidget {
 
 class GameLibraryState extends State<GameLibrary> {
   final db = GameDatabase();
-  TextFilter _textFilter = TextFilter();
+  Filter _filter = Filter();
 
   List<Game> games = [];
 
@@ -78,23 +79,12 @@ class GameLibraryState extends State<GameLibrary> {
 
   Widget _buildGameList(List<Game> gameList) {
     return Expanded(
-      child: ListView.builder(
-        padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 60),
-        itemCount: gameList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _textFilter.text == null || _textFilter.text=="" 
-            ? GestureDetector(
-              child: GameCard(
-                game: gameList[index],
-              ),
-              onLongPress: () async {
-                await db.removeGame(gameList[index].id);
-                setupList();
-                _showSnackBar(context, "${gameList[index].name} has been deleted");
-              },
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailsScreen(game: gameList[index]))),
-            )
-            :  _checkIfItemInFilter(gameList[index])
+      child: Scrollbar(
+        child: ListView.builder(
+          padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 60),
+          itemCount: gameList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _filter.filter(gameList[index])
               ? GestureDetector(
                 child: GameCard(
                   game: gameList[index],
@@ -107,7 +97,8 @@ class GameLibraryState extends State<GameLibrary> {
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailsScreen(game: gameList[index]))),
               )
               : Container();
-        },
+          },
+        ),
       ),
     );
   }
@@ -213,31 +204,71 @@ class GameLibraryState extends State<GameLibrary> {
               ),
             ),
             contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-            subtitle: _textFilter.text=="" 
+            subtitle: !_filter.textFilter.hasFilter() 
               ? null 
               : Text(
-                _textFilter.text,
+                _filter.textFilter.text,
                 style: TextStyle(
                   color: Colors.blue,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
-            trailing: _textFilter.text=="" 
+            trailing: !_filter.textFilter.hasFilter() 
               ? null 
               : FlatButton(
                 child: Icon(Icons.close),
-                onPressed: () => setState(() => _textFilter.reset()),
+                onPressed: () => setState(() => _filter.textFilter.reset()),
               ),
             onTap: () async {
               Navigator.of(context).pop();
-              TextFilter newFilter = await Navigator.of(context).push(MaterialPageRoute<TextFilter>(
+              TextFilter textFilter = await Navigator.of(context).push(MaterialPageRoute<TextFilter>(
                 builder: (BuildContext context) {
-                  return TextFilterDialog(textFilter: _textFilter,);
+                  return TextFilterDialog(filter: TextFilter.fromFilter(_filter.textFilter),);
                 },
                 fullscreenDialog: true
               ));
-              if (newFilter != null) {
-                _textFilter = newFilter;
+              if (textFilter != null) {
+                _filter.textFilter = textFilter;
+              }
+            },
+          ),
+          Divider(
+            thickness: 5,
+          ),
+          ListTile(
+            leading: Icon(Icons.videogame_asset),
+            title: Text(
+              "Platform Search",
+              style: TextStyle(
+                fontSize: 18
+              ),
+            ),
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            subtitle: !_filter.platformFilter.hasFilter()
+              ? null
+              : Text(
+                _filter.platformFilter.selectedPlatforms.toString(),
+                style: TextStyle(
+                  color: Colors.blue
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            trailing: !_filter.platformFilter.hasFilter()
+              ? null
+              : FlatButton(
+                child: Icon(Icons.close),
+                onPressed: () => setState(() => _filter.platformFilter.reset()),
+              ),
+            onTap: () async {
+              Navigator.of(context).pop();
+              PlatformFilter platformFilter = await Navigator.of(context).push(MaterialPageRoute<PlatformFilter>(
+                builder: (BuildContext context) {
+                  return PlatformFilterDialog(filter: PlatformFilter.fromFilter(_filter.platformFilter),);
+                },
+                fullscreenDialog: true
+              ));
+              if (platformFilter != null) {
+                _filter.platformFilter = platformFilter;
               }
             },
           ),
@@ -262,16 +293,6 @@ class GameLibraryState extends State<GameLibrary> {
     setState(() {
       games = _games;
     });
-  }
-
-  bool _checkIfItemInFilter(Game game) {    
-
-
-    //TODO: When added, include other filter logic in this section
-    if (_textFilter.includeName && game.name.toLowerCase().contains(_textFilter.text.toLowerCase())) return true;
-    if (_textFilter.includeNotes && game.notes != null && game.notes.toLowerCase().contains(_textFilter.text.toLowerCase())) return true;
-    return false;
-    
   }
 
   _showSnackBar(BuildContext context, String message) => Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));

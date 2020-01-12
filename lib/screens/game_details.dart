@@ -14,9 +14,6 @@ class GameDetailsScreen extends StatefulWidget {
 
 class _GameDetailsScreenState extends State<GameDetailsScreen> {
 
-  int _topSectionFlex = 1;
-  int _middleSectionFlex = 1;
-  int _bottomSectionFlex = 3;
   bool _notesIsMinimized = true;
 
   @override

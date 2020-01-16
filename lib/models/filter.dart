@@ -5,12 +5,14 @@ class Filter {
   PlatformFilter platformFilter;
   OwnershipFilter ownershipFilter;
   EditionFilter editionFilter;
-  
+  PlayStatusFilter playStatusFilter;
+
   Filter() {
     textFilter = TextFilter();
     platformFilter = PlatformFilter();
     ownershipFilter = OwnershipFilter();
     editionFilter = EditionFilter();
+    playStatusFilter = PlayStatusFilter();
   }
 
 
@@ -20,6 +22,7 @@ class Filter {
       && platformFilter.filter(game) 
       && ownershipFilter.filter(game)
       && editionFilter.filter(game)
+      && playStatusFilter.filter(game)
     ) return true;
     return false;
   }
@@ -102,7 +105,7 @@ class OwnershipFilter {
   /// Will filter the provided game based off the data within the filter
   bool filter(Game game) {
     if (selectedStatuses.isEmpty) return true;
-    if (selectedStatuses.contains(game.platform)) return true;
+    if (selectedStatuses.contains(game.ownedStatus)) return true;
     return false;
   }
 
@@ -140,5 +143,32 @@ class EditionFilter {
 
   /// Returns whether this filter has data
   bool hasFilter () => selectedEditions.isNotEmpty;
+  
+}
+
+class PlayStatusFilter {
+  Set<String> selectedStatuses;
+
+  PlayStatusFilter() {
+    selectedStatuses = Set();
+  }
+  PlayStatusFilter.fromFilter(PlayStatusFilter filter) {
+    selectedStatuses = filter.selectedStatuses;
+  }
+
+  /// Will filter the provided game based off the data within the filter
+  bool filter(Game game) {
+    if (selectedStatuses.isEmpty) return true;
+    if (selectedStatuses.contains(game.playStatus)) return true;
+    return false;
+  }
+
+  /// Reset parameters to default
+  void reset() {
+    selectedStatuses.clear();
+  }
+
+  /// Returns whether this filter has data
+  bool hasFilter () => selectedStatuses.isNotEmpty;
   
 }

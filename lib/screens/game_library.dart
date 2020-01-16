@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_game_library/components/animated_fab.dart';
+import 'package:my_game_library/components/filter_dialogs/ownership_filter_modal.dart';
 import 'package:my_game_library/database/database.dart';
 import 'package:my_game_library/models/game.dart';
 import 'package:my_game_library/components/game_card.dart';
@@ -8,6 +9,8 @@ import 'game_details.dart';
 import 'edit_game.dart';
 import 'package:my_game_library/components/filter_dialogs/text_filter_modal.dart';
 import 'package:my_game_library/components/filter_dialogs/platform_filter_modal.dart';
+import 'package:my_game_library/components/filter_dialogs/play_status_filter_modal.dart';
+
 
 class GameLibrary extends StatefulWidget {
   @override
@@ -236,7 +239,6 @@ class GameLibraryState extends State<GameLibrary> {
             thickness: 5,
           ),
           ListTile(
-            leading: Icon(Icons.videogame_asset),
             title: Text(
               "Platform Search",
               style: TextStyle(
@@ -269,6 +271,84 @@ class GameLibraryState extends State<GameLibrary> {
               ));
               if (platformFilter != null) {
                 _filter.platformFilter = platformFilter;
+              }
+            },
+          ),
+          Divider(
+            thickness: 5,
+          ),
+          ListTile(
+            title: Text(
+              "Ownership Search",
+              style: TextStyle(
+                fontSize: 18
+              ),
+            ),
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            subtitle: !_filter.ownershipFilter.hasFilter()
+              ? null
+              : Text(
+                _filter.ownershipFilter.selectedStatuses.toString(),
+                style: TextStyle(
+                  color: Colors.blue
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            trailing: !_filter.ownershipFilter.hasFilter()
+              ? null
+              : FlatButton(
+                child: Icon(Icons.close),
+                onPressed: () => setState(() => _filter.ownershipFilter.reset()),
+              ),
+            onTap: () async {
+              Navigator.of(context).pop();
+              OwnershipFilter ownershipFilter = await Navigator.of(context).push(MaterialPageRoute<OwnershipFilter>(
+                builder: (BuildContext context) {
+                  return OwnershipFilterDialog(filter: OwnershipFilter.fromFilter(_filter.ownershipFilter),);
+                },
+                fullscreenDialog: true
+              ));
+              if (ownershipFilter != null) {
+                _filter.ownershipFilter = ownershipFilter;
+              }
+            },
+          ),
+          Divider(
+            thickness: 5,
+          ),
+          ListTile(
+            title: Text(
+              "Play Status Search",
+              style: TextStyle(
+                fontSize: 18
+              ),
+            ),
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            subtitle: !_filter.playStatusFilter.hasFilter()
+              ? null
+              : Text(
+                _filter.playStatusFilter.selectedStatuses.toString(),
+                style: TextStyle(
+                  color: Colors.blue
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            trailing: !_filter.playStatusFilter.hasFilter()
+              ? null
+              : FlatButton(
+                child: Icon(Icons.close),
+                onPressed: () => setState(() => _filter.playStatusFilter.reset()),
+              ),
+            onTap: () async {
+              Navigator.of(context).pop();
+              PlayStatusFilter playStatusFilter = await Navigator.of(context).push(MaterialPageRoute<PlayStatusFilter>(
+                builder: (BuildContext context) {
+                  return PlayStatusFilterDialog(filter: PlayStatusFilter.fromFilter(_filter.playStatusFilter),);
+                },
+                fullscreenDialog: true
+              ));
+              if (playStatusFilter != null) {
+                _filter.playStatusFilter = playStatusFilter;
               }
             },
           ),
